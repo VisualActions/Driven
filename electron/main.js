@@ -33,11 +33,13 @@ function getOrCreateSecret(userDataDir) {
 }
 
 async function startServer() {
-  const userDataDir = app.getPath('userData');
-  fs.mkdirSync(userDataDir, { recursive: true });
+  const dataDir = app.isPackaged
+    ? app.getPath('userData')
+    : path.join(__dirname, '..');
+  fs.mkdirSync(dataDir, { recursive: true });
   const port = await findFreePort();
-  const secret = getOrCreateSecret(userDataDir);
-  const dbPath = path.join(userDataDir, 'driven.db');
+  const secret = getOrCreateSecret(dataDir);
+  const dbPath = path.join(dataDir, 'driven.db');
   serverUrl = `http://127.0.0.1:${port}`;
 
   const serverPath = path.join(__dirname, '..', 'server.js');
