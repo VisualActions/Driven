@@ -17,7 +17,9 @@ if (!JWT_SECRET) {
   process.exit(1);
 }
 const TRUST_PROXY = process.env.TRUST_PROXY || 1;
-const COOKIE_SECURE = process.env.COOKIE_SECURE === '1' || IS_PROD;
+const COOKIE_SECURE = process.env.COOKIE_SECURE != null
+  ? process.env.COOKIE_SECURE === '1'
+  : IS_PROD;
 
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'driven.db');
 const db = new Database(DB_PATH);
