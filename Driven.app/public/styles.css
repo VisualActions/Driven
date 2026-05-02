@@ -623,40 +623,6 @@ a:hover { text-decoration: underline; }
 .add-friend-card .feedback.ok { color: var(--success); }
 .add-friend-card .feedback.err { color: var(--danger); }
 
-/* Settings modal */
-.settings-preview {
-  display: flex; align-items: center; gap: 14px;
-  padding: 12px; margin-bottom: 6px;
-  background: rgba(255,255,255,.03);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-}
-.settings-avatar {
-  width: 56px; height: 56px; font-size: 22px;
-  transition: background var(--dur) var(--ease);
-}
-.settings-name { font-weight: 600; font-size: 16px; }
-.settings-email { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-.settings-divider {
-  height: 1px; background: var(--border);
-  margin: 18px 0 4px;
-}
-.settings-hint { color: var(--text-muted); font-weight: 500; letter-spacing: 0; text-transform: none; }
-.swatch-row {
-  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px;
-}
-.swatch {
-  width: 30px; height: 30px; border-radius: 50%;
-  cursor: pointer; border: 2px solid transparent;
-  box-shadow: 0 0 0 1px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.1);
-  transition: transform var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
-}
-.swatch:hover { transform: scale(1.1); }
-.swatch.selected {
-  border-color: white;
-  box-shadow: 0 0 0 2px var(--accent), 0 0 12px rgba(111,123,247,.5);
-}
-
 @media (max-width: 900px) {
   .app { grid-template-columns: 64px 220px 1fr; }
   .members { display: none; }

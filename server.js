@@ -238,6 +238,51 @@ app.get('/api/me', authMiddleware, (req, res) => {
   res.json(row);
 });
 
+app.patch('/api/me', authMiddleware, (req, res) => {
+  const me = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
+  if (!me) return res.status(404).json({ error: 'Not found' });
+
+  const { username, avatar_color, current_password, new_password } = req.body || {};
+  const updates = {};
+
+  if (username !== undefined && username !== me.username) {
+    const u = String(username).trim();
+    if (u.length < 3 || u.length > 24) return res.status(400).json({ error: 'Username must be 3-24 chars' });
+    if (!/^[\w.-]+$/.test(u)) return res.status(400).json({ error: 'Username has invalid characters' });
+    const taken = db.prepare('SELECT 1 FROM users WHERE username = ? AND id != ?').get(u, me.id);
+    if (taken) return res.status(409).json({ error: 'Username already taken' });
+    updates.username = u;
+  }
+
+  if (avatar_color !== undefined && avatar_color !== me.avatar_color) {
+    if (!/^#[0-9a-fA-F]{6}$/.test(String(avatar_color))) return res.status(400).json({ error: 'Invalid color' });
+    updates.avatar_color = avatar_color;
+  }
+
+  if (new_password !== undefined && new_password !== '') {
+    if (String(new_password).length < 6) return res.status(400).json({ error: 'Password must be 6+ chars' });
+    if (!current_password || !bcrypt.compareSync(current_password, me.password_hash)) {
+      return res.status(401).json({ error: 'Current password is incorrect' });
+    }
+    updates.password_hash = bcrypt.hashSync(new_password, 10);
+  }
+
+  if (!Object.keys(updates).length) return res.json({ ok: true, unchanged: true });
+
+  const cols = Object.keys(updates);
+  const set = cols.map(c => `${c} = ?`).join(', ');
+  const vals = cols.map(c => updates[c]);
+  db.prepare(`UPDATE users SET ${set} WHERE id = ?`).run(...vals, me.id);
+
+  if (updates.username || updates.password_hash) {
+    const fresh = db.prepare('SELECT id, username, email FROM users WHERE id = ?').get(me.id);
+    setAuthCookie(res, sign(fresh));
+  }
+
+  const row = db.prepare('SELECT id, username, email, avatar_color FROM users WHERE id = ?').get(me.id);
+  res.json(row);
+});
+
 // ---------------- SERVERS (guilds) ----------------
 app.get('/api/servers', authMiddleware, (req, res) => {
   const rows = db.prepare(`

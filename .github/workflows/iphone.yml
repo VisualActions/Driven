@@ -42,8 +42,27 @@ jobs:
             -derivedDataPath build \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
 
+      - name: Package as unsigned .ipa
+        run: |
+          PRODUCTS=mobile/ios/App/build/Build/Products/Release-iphoneos
+          APP=$(ls -d "$PRODUCTS"/*.app | head -n1)
+          if [ -z "$APP" ]; then echo "no .app found in $PRODUCTS"; exit 1; fi
+          STAGE=$(mktemp -d)
+          mkdir -p "$STAGE/Payload"
+          cp -R "$APP" "$STAGE/Payload/Driven.app"
+          (cd "$STAGE" && zip -qr Driven.ipa Payload)
+          mkdir -p out
+          mv "$STAGE/Driven.ipa" out/Driven.ipa
+          ls -lh out/Driven.ipa
+
       - uses: actions/upload-artifact@v4
         with:
-          name: driven-iphone-unsigned
+          name: driven-iphone-unsigned-ipa
+          path: out/Driven.ipa
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: driven-iphone-unsigned-app
           path: mobile/ios/App/build/Build/Products/Release-iphoneos/*.app
           if-no-files-found: warn

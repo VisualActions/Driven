@@ -1,0 +1,20 @@
+{
+	"appId": "com.driven.app",
+	"appName": "Driven",
+	"webDir": "www",
+	"server": {
+		"url": "https://CHANGE-ME.example.com",
+		"cleartext": false,
+		"allowNavigation": [
+			"*.ngrok-free.app",
+			"*.ngrok.io"
+		]
+	},
+	"ios": {
+		"contentInset": "always"
+	},
+	"android": {
+		"allowMixedContent": false
+	},
+	"packageClassList": []
+}
