@@ -1,0 +1,21 @@
+node_modules/
+*.db
+*.db-wal
+*.db-shm
+.env
+.env.local
+.env.*.local
+dist/
+out/
+build/output/
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# local
+Desktop - Shortcut.lnk
+claudecode.md
+.claude/

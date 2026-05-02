@@ -1,0 +1,80 @@
+{
+  "name": "driven",
+  "version": "1.0.0",
+  "description": "A Discord-like chat app with web + desktop clients",
+  "main": "electron/main.js",
+  "author": "Driven",
+  "license": "MIT",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "electron": "electron .",
+    "desktop": "concurrently \"node server.js\" \"wait-on http://localhost:3000 && electron .\"",
+    "postinstall": "electron-builder install-app-deps || true",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.3.0",
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.2",
+    "socket.io": "^4.8.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "electron": "^32.1.2",
+    "electron-builder": "^25.0.5",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.driven.app",
+    "productName": "Driven",
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/better-sqlite3/**"
+    ],
+    "files": [
+      "electron/**",
+      "public/**",
+      "server.js",
+      "package.json",
+      "!**/*.map",
+      "!**/test/**",
+      "!**/.bin/**"
+    ],
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ]
+    },
+    "mac": {
+      "target": [
+        { "target": "dmg", "arch": ["x64", "arm64"] },
+        { "target": "zip", "arch": ["x64", "arm64"] }
+      ],
+      "category": "public.app-category.social-networking",
+      "hardenedRuntime": false
+    },
+    "linux": {
+      "target": [
+        { "target": "AppImage", "arch": ["x64"] },
+        { "target": "deb", "arch": ["x64"] }
+      ],
+      "category": "Network"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

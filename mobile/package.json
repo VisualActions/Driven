@@ -1,0 +1,22 @@
+{
+  "name": "driven-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Capacitor shell for Driven (iOS + Android)",
+  "scripts": {
+    "sync": "cap sync",
+    "open:ios": "cap open ios",
+    "open:android": "cap open android",
+    "build:android": "cap sync android && cd android && ./gradlew assembleRelease",
+    "add:ios": "cap add ios",
+    "add:android": "cap add android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/ios": "^6.1.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  }
+}
